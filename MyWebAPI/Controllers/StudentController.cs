@@ -15,7 +15,7 @@ namespace MyWebAPI.Controllers
             this.context = context;
         }
 
-        [HttpGet]
+        [HttpGet("GetAllStudents")]
         public async Task<ActionResult<List<Student>>> GetAllStudents()
         {
             var studentsList =  await context.GetStudents();
