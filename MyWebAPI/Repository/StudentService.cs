@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using MyWebAPI.Data;
+using MyWebAPI.DTOs;
 using MyWebAPI.Models;
 
 namespace MyWebAPI.Repository
@@ -7,19 +9,21 @@ namespace MyWebAPI.Repository
     public class StudentService : IStudentService
     {
         private readonly DataContext _context;
+        private readonly IMapper _mapper;
 
-        public StudentService(DataContext context)
+        public StudentService(DataContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
-        public async Task<List<Student>> CreateStudent(Student student)
+        public async Task<List<GetStudentDto>> CreateStudent(AddStudentDto student)
         {
-            await _context.Students.AddAsync(student);
+            await _context.Students.AddAsync(_mapper.Map<Student>(student));
             _context.SaveChanges();
-            return await _context.Students.ToListAsync();
+            return await _context.Students.Select(c => _mapper.Map<GetStudentDto>(c)).ToListAsync();
         }
 
-        public async Task<List<Student>>? DeleteStudent(int id)
+        public async Task<List<GetStudentDto>>? DeleteStudent(int id)
         {
             var student = await _context.Students.FindAsync(id);
             if (student == null)
@@ -28,27 +32,27 @@ namespace MyWebAPI.Repository
             }
             _context.Students.Remove(student);
             _context.SaveChanges();
-            return await _context.Students.ToListAsync();
+            return await _context.Students.Select(c => _mapper.Map<GetStudentDto>(c)).ToListAsync();
         }
 
-        public async Task<Student>? GetStudent(int id)
+        public async Task<GetStudentDto>? GetStudent(int id)
         {
             var student = await _context.Students.FindAsync(id);
-            return student;
+            return _mapper.Map<GetStudentDto>(student);
         }
 
-        public async Task<Student>? GetStudentByNameAndLastName(string name, string lastname)
+        public async Task<GetStudentDto>? GetStudentByNameAndLastName(string name, string lastname)
         {
             var student = await _context.Students.Where(x =>  x.LastName == lastname && x.Name == name).FirstOrDefaultAsync();
-            return student;
+            return _mapper.Map<GetStudentDto>(student);
         }
 
-        public async Task<List<Student>> GetStudents()
+        public async Task<List<GetStudentDto>> GetStudents()
         {
-            return await _context.Students.ToListAsync();
+            return await _context.Students.Select(c => _mapper.Map<GetStudentDto>(c)).ToListAsync();
         }
 
-        public async Task<Student>? UpdateStudent(Student student)
+        public async Task<GetStudentDto>? UpdateStudent(UpdateStudentDto student)
         {
             var updatedStudent = await _context.Students.FindAsync(student.Id);
             if (updatedStudent == null)
@@ -59,9 +63,9 @@ namespace MyWebAPI.Repository
             updatedStudent.LastName = student.LastName;
             updatedStudent.Age = student.Age;
             updatedStudent.Class = student.Class;
-            _context.Students.Update(updatedStudent);
+            _context.Students.Update(_mapper.Map<Student>(updatedStudent));
             _context.SaveChanges();
-            return updatedStudent;
+            return _mapper.Map<GetStudentDto>(updatedStudent);
         }
     }
 }
