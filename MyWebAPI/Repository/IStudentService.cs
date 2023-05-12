@@ -1,14 +1,15 @@
-﻿using MyWebAPI.Models;
+﻿using MyWebAPI.DTOs;
+using MyWebAPI.Models;
 
 namespace MyWebAPI.Repository
 {
     public interface IStudentService
     {
-        Task<List<Student>> GetStudents();
-        Task<Student> GetStudent(int id);
-        Task<Student> GetStudentByNameAndLastName(string name, string lastname);
-        Task<List<Student>> CreateStudent(Student student);
-        Task<Student> UpdateStudent(Student student);
-        Task<List<Student>> DeleteStudent(int id);
+        Task<List<GetStudentDto>> GetStudents();
+        Task<GetStudentDto> GetStudent(int id);
+        Task<GetStudentDto> GetStudentByNameAndLastName(string name, string lastname);
+        Task<List<GetStudentDto>> CreateStudent(AddStudentDto student);
+        Task<GetStudentDto> UpdateStudent(UpdateStudentDto student);
+        Task<List<GetStudentDto>> DeleteStudent(int id);
     }
 }

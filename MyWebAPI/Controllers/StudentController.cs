@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using MyWebAPI.DTOs;
 using MyWebAPI.Models;
 using MyWebAPI.Repository;
 
@@ -16,7 +17,7 @@ namespace MyWebAPI.Controllers
         }
 
         [HttpGet("GetAllStudents")]
-        public async Task<ActionResult<List<Student>>> GetAllStudents()
+        public async Task<ActionResult<List<GetStudentDto>>> GetAllStudents()
         {
             var studentsList =  await context.GetStudents();
             return Ok(studentsList);
@@ -24,7 +25,7 @@ namespace MyWebAPI.Controllers
 
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Student>> GetStudent(int id)
+        public async Task<ActionResult<GetStudentDto>> GetStudent(int id)
         {
             var student = await context.GetStudent(id);
             if (student == null)
@@ -35,7 +36,7 @@ namespace MyWebAPI.Controllers
         }
 
         [HttpPost("CreateStudent")]
-        public async Task<ActionResult<List<Student>>> CreateStudent(Student student)
+        public async Task<ActionResult<List<GetStudentDto>>> CreateStudent(AddStudentDto student)
         {
             var studentsList = await context.CreateStudent(student);
 
@@ -43,7 +44,7 @@ namespace MyWebAPI.Controllers
         }
 
         [HttpDelete("DeleteStudent")]
-        public async Task<ActionResult<List<Student>>> DeleteStudent(int id)
+        public async Task<ActionResult<List<GetStudentDto>>> DeleteStudent(int id)
         {
             var studentsLIst = await context.DeleteStudent(id);
             if (studentsLIst == null)
@@ -54,7 +55,7 @@ namespace MyWebAPI.Controllers
         }
 
         [HttpGet("{name}/{lastname}")]
-        public async Task<ActionResult<Student>> GetStudentByNameAndLastName(string name, string lastname)
+        public async Task<ActionResult<GetStudentDto>> GetStudentByNameAndLastName(string name, string lastname)
         {
             var student = await context.GetStudentByNameAndLastName(name, lastname);
             if (student == null)
@@ -65,7 +66,7 @@ namespace MyWebAPI.Controllers
         }
 
         [HttpPut("UpdateStudent")]
-        public async Task<ActionResult<Student>> UpdateStudent(Student student)
+        public async Task<ActionResult<GetStudentDto>> UpdateStudent(UpdateStudentDto student)
         {
             var newStudent = await context.UpdateStudent(student);
             if (newStudent == null)
